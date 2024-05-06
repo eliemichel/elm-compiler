@@ -142,6 +142,7 @@ Executable elm
         Canonicalize.Type
         Compile
         Generate.C
+        Generate.C.Functions
         Generate.Html
         Generate.JavaScript
         Generate.JavaScript.Builder
