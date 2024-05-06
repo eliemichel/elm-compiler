@@ -49,6 +49,7 @@ data Flags =
 data Output
   = JS FilePath
   | Html FilePath
+  | C89 FilePath
   | DevNull
 
 
@@ -116,6 +117,11 @@ runHelp root paths style (Flags debug optimize maybeOutput _ maybeDocs) =
                   do  name <- hasOneMain artifacts
                       builder <- toBuilder root details desiredMode artifacts
                       generate style target (Html.sandwich name builder) (NE.List name [])
+
+                Just (C89 target) ->
+                  do  name <- hasOneMain artifacts
+                      builder <- Task.mapError Exit.MakeBadGenerate $ Generate.naiveC  root details artifacts
+                      generate style target builder (NE.List name [])
 
 
 
@@ -286,7 +292,7 @@ output =
     , _plural = "output files"
     , _parser = parseOutput
     , _suggest = \_ -> return []
-    , _examples = \_ -> return [ "elm.js", "index.html", "/dev/null" ]
+    , _examples = \_ -> return [ "elm.js", "index.html", "main.c", "/dev/null" ]
     }
 
 
@@ -295,6 +301,7 @@ parseOutput name
   | isDevNull name      = Just DevNull
   | hasExt ".html" name = Just (Html name)
   | hasExt ".js"   name = Just (JS name)
+  | hasExt ".c"    name = Just (C89 name)
   | otherwise           = Nothing
 
 

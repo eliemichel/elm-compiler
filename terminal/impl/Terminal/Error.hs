@@ -72,9 +72,11 @@ exitFailure =
 exitWith :: Exit.ExitCode -> [P.Doc] -> IO a
 exitWith code docs =
   do  isTerminal <- hIsTerminalDevice stderr
-      let adjust = if isTerminal then id else P.plain
+      --let adjust = if isTerminal then id else P.plain
+      --P.displayIO stderr $ P.renderPretty 1 80 $
+      --  adjust $ P.vcat $ concatMap (\d -> [d,""]) docs
       P.displayIO stderr $ P.renderPretty 1 80 $
-        adjust $ P.vcat $ concatMap (\d -> [d,""]) docs
+        P.plain $ P.vcat $ concatMap (\d -> [d,""]) docs
       hPutStrLn stderr ""
       Exit.exitWith code
 

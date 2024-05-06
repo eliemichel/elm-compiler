@@ -4,6 +4,7 @@ module Generate
   , dev
   , prod
   , repl
+  , naiveC
   )
   where
 
@@ -26,6 +27,7 @@ import qualified Elm.Interface as I
 import qualified Elm.ModuleName as ModuleName
 import qualified Elm.Package as Pkg
 import qualified File
+import qualified Generate.C as C
 import qualified Generate.JavaScript as JS
 import qualified Generate.Mode as Mode
 import qualified Nitpick.Debug as Nitpick
@@ -75,6 +77,16 @@ prod root details (Build.Artifacts pkg _ roots modules) =
       let mode = Mode.Prod (Mode.shortenFieldNames graph)
       let mains = gatherMains pkg objects roots
       return $ JS.generate mode graph mains
+
+
+naiveC :: FilePath -> Details.Details -> Build.Artifacts -> Task B.Builder
+naiveC root details (Build.Artifacts pkg _ roots modules) =
+  do  objects <- finalizeObjects =<< loadObjects root details modules
+      checkForDebugUses objects
+      let graph = objectsToGlobalGraph objects
+      let mode = Mode.Prod (Mode.shortenFieldNames graph)
+      let mains = gatherMains pkg objects roots
+      return $ C.generate mode graph mains
 
 
 repl :: FilePath -> Details.Details -> Bool -> Build.ReplArtifacts -> N.Name -> Task B.Builder

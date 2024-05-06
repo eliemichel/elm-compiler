@@ -1,5 +1,5 @@
 elm-stuff
-dist
+dist*/
 cabal-dev
 .cabal-sandbox/
 cabal.sandbox.config
