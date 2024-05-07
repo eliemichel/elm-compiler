@@ -1,7 +1,8 @@
 {-# OPTIONS_GHC -Wall #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Generate.JavaScript.Name
+module Generate.C.Name
   ( Name(..)
+  , TypeName(..)
   , toBuilder
   , fromIndex
   , fromInt
@@ -38,6 +39,7 @@ import qualified Elm.Package as Pkg
 newtype Name =
   Name { toBuilder :: B.Builder }
 
+type TypeName = Name
 
 
 -- CONSTRUCTORS

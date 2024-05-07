@@ -3,11 +3,13 @@ module Generate.Mode
   , isDebug
   , ShortFieldNames
   , shortenFieldNames
+  , getFieldCName
   )
   where
 
 
 import qualified Data.List as List
+import Data.Map ((!))
 import qualified Data.Map as Map
 import qualified Data.Maybe as Maybe
 import qualified Data.Name as Name
@@ -15,6 +17,7 @@ import qualified Data.Name as Name
 import qualified AST.Optimized as Opt
 import qualified Elm.Compiler.Type.Extract as Extract
 import qualified Generate.JavaScript.Name as JsName
+import qualified Generate.C.Name as CName
 
 
 
@@ -61,3 +64,9 @@ addField :: ShortFieldNames -> Name.Name -> ShortFieldNames
 addField shortNames field =
   let rename = JsName.fromInt (Map.size shortNames) in
   Map.insert field rename shortNames
+
+getFieldCName :: ShortFieldNames -> Name.Name -> CName.Name
+getFieldCName shortNames field =
+  let (JsName.Name builder) = shortNames ! field in
+  CName.Name builder
+  
